@@ -1,6 +1,6 @@
 
 # 🔬 Segmentación de Núcleos Celulares - Proyecto ML End-to-End
-
+Tomás Hermosilla - 2025
 Proyecto de **segmentación de instancias de núcleos celulares** usando **Deep Learning** con arquitectura U-Net implementada desde cero. Incluye pipeline completo de ingeniería de datos, entrenamiento y despliegue.
 
 ## 🎯 Objetivo del Proyecto
@@ -279,13 +279,11 @@ for batch in train_loader:
 
 ## 📞 Información de Contacto
 
-**Proyecto**: Segmentación de Núcleos Celulares  
-**Framework**: PyTorch + OpenCV  
-**Dataset**: DSB2018 (2018 Data Science Bowl)  
-**Arquitectura**: U-Net desde cero  
+**Autor**: Tomás Hermosilla
+**Contacto**: tomas.hermosilla.p@gmail.com 
 
 ---
 
 ## 📜 Licencia
 
-Este proyecto es de propósito educativo y de investigación.
+Este proyecto abierto es de propósito educativo y de investigación.

@@ -189,19 +189,19 @@ Desarrollar un sistema completo de segmentación de instancias de núcleos celul
 - Transformaciones básicas de preprocesamiento
 
 **Tareas Específicas:**
-- [ ] Estudiar documentación oficial de `torch.utils.data.Dataset`
-- [ ] Implementar clase `NucleiDataset` básica:
+- [x] Estudiar documentación oficial de `torch.utils.data.Dataset`
+- [x] Implementar clase `NucleiDataset` básica:
   - Método `__init__`: inicialización con paths de datos
   - Método `__len__`: retornar número de muestras
   - Método `__getitem__`: cargar imagen y máscaras procesadas
-- [ ] Integrar generación de mapa de pesos en `__getitem__`
-- [ ] Añadir transformaciones básicas:
+- [x] Integrar generación de mapa de pesos en `__getitem__`
+- [x] Añadir transformaciones básicas:
   - Redimensionamiento a tamaño fijo (256x256)
   - Normalización simple de imágenes
   - Conversión a tensores PyTorch
-- [ ] Crear `DataLoader` con batch_size=2
-- [ ] Iterar sobre un batch y visualizar datos cargados
-- [ ] Verificar dimensiones y tipos de datos
+- [x] Crear `DataLoader` con batch_size=2
+- [x] Iterar sobre un batch y visualizar datos cargados
+- [x] Verificar dimensiones y tipos de datos
 
 **Entregables:**
 - Clase `NucleiDataset` completamente implementada y documentada
