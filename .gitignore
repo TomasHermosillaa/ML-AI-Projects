@@ -1,3 +1,5 @@
 /.kaggle
 /.windsurf
 /venv
+/*.pth
+/data

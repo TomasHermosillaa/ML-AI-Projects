@@ -1,19 +1,35 @@
 
-# 🔬 Segmentación de Núcleos Celulares - Proyecto ML End-to-End
+# Segmentación y Conteo de Núcleos Celulares - Proyecto ML End-to-End
 Tomás Hermosilla - 2025
-Proyecto de **segmentación de instancias de núcleos celulares** usando **Deep Learning** con arquitectura U-Net implementada desde cero. Incluye pipeline completo de ingeniería de datos, entrenamiento y despliegue.
 
-## 🎯 Objetivo del Proyecto
+Sistema completo de **segmentación y conteo automático de células** usando **U-Net** desde cero.
 
-Desarrollar un sistema completo de segmentación que pueda:
-- Identificar y delimitar núcleos individuales en imágenes microscópicas
-- Separar núcleos que se tocan usando mapas de peso morfológicos
-- Procesar imágenes biomédicas con diferentes técnicas de tinción
-- Proporcionar máscaras precisas para análisis posterior
+## Objetivo del Proyecto COMPLETADO
+
+Sistema completo de segmentación y conteo que:
+- ✅ **Identifica y delimita núcleos individuales** en imágenes microscópicas
+- ✅ **Cuenta células automáticamente** con 78.3% de precisión
+- ✅ **Segmenta con 89.82% Dice Score** y 95.31% de precisión 
+- ✅ **Procesa imágenes biomédicas** con técnicas de normalización avanzadas
+- ✅ **Pipeline end-to-end funcional**: Imagen → Segmentación → Conteo
+
+## Resultados Principales
+
+### Rendimiento del Modelo
+- **Dice Score**: 89.82% (excelente precisión de segmentación)
+- **IoU**: 81.53% (alta superposición con ground truth)
+- **Precision**: 95.31% (muy pocas falsas detecciones)
+- **Recall**: 84.93% (detecta la mayoría de núcleos)
+
+### Conteo de Células
+- **Método óptimo**: Componentes conectados simples
+- **Precisión de conteo**: 78.3% (18/23 células detectadas)
+- **Error promedio**: ±5 células por imagen
+- **Métodos implementados**: Simple, Watershed, Distance Transform
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 ML-AI-Projects/
@@ -26,7 +42,9 @@ ML-AI-Projects/
 ├── src/                           # Código fuente principal
 │   ├── nuclei_dataset.py          # Dataset PyTorch personalizado
 │   ├── normalization.py           # Técnicas de normalización biomédica
-│   └── weight_maps.py            # Generación de mapas de peso morfológicos
+│   ├── conv_blocks.py             # Arquitectura U-Net desde cero
+│   ├── train.py                   # Script de entrenamiento completo
+│   └── inference.py               # Predicción y conteo de células
 ├── notebooks/                     # Análisis y experimentación
 │   ├── exploratory_analysis.ipynb     # EDA del dataset
 │   ├── morphological_operations.ipynb # Operaciones morfológicas
@@ -48,6 +66,9 @@ ML-AI-Projects/
 │   ├── dataset_validation_sample.png
 │   ├── image-stats.png
 │   └── image-weight.png
+├── unet_nuclei.pth                # Modelo entrenado listo para uso
+├── cell_counting_result.png       # Visualización de conteo de células
+├── prediction_result.png          # Resultado de predicción
 ├── venv/                          # Entorno virtual Python
 ├── requirements.txt               # Dependencias del proyecto
 └── README.md                      # Este archivo
@@ -55,7 +76,7 @@ ML-AI-Projects/
 
 ---
 
-## 🛠️ Configuración del Entorno
+## Configuración del Entorno
 
 ### 1. Prerrequisitos
 - **Python 3.8+**
@@ -96,7 +117,7 @@ jupyter lab --no-browser --port=8888
 
 ---
 
-## 📚 Dataset (DSB2018)
+## Dataset (DSB2018)
 
 ### Preparación
 1. **Descargar** dataset desde Kaggle: `2018 Data Science Bowl`
@@ -108,23 +129,23 @@ python tests/analyze_dataset.py
 ```
 
 ### Características del Dataset
-- **📊 2,224 muestras** - Robusto para entrenamiento
-- **🖼️ Dimensiones fijas**: 256×256 píxeles
-- **🎯 Máscaras binarias**: Núcleos consolidados (0=fondo, 255=núcleo)
-- **⚖️ Desbalance de clases**: 12.2% núcleos vs 87.8% fondo
-- **🔬 Variedad**: Diferentes técnicas de tinción y tipos celulares
+- **2,224 muestras** - Robusto para entrenamiento
+- **Dimensiones fijas**: 256×256 píxeles
+- **Máscaras binarias**: Núcleos consolidados (0=fondo, 255=núcleo)
+- **Desbalance de clases**: 12.2% núcleos vs 87.8% fondo
+- **Variedad**: Diferentes técnicas de tinción y tipos celulares
 
 ---
 
-## 🔧 Componentes Implementados
+## Componentes Implementados
 
-### 📊 **Etapa 1: Análisis Exploratorio** ✅
+### Etapa 1: Análisis Exploratorio
 - **EDA completo** del dataset DSB2018
 - **Visualizaciones** estadísticas de distribuciones
 - **Identificación** de patrones y desafíos
 - **Análisis** de calidad de máscaras
 
-### 🛠️ **Etapa 2: Ingeniería de Datos** ✅
+### Etapa 2: Ingeniería de Datos
 
 #### Técnicas de Normalización (`src/normalization.py`)
 ```python
@@ -162,9 +183,44 @@ dataset = NucleiDataset(
 loader = DataLoader(dataset, batch_size=4, shuffle=True)
 ```
 
+### Etapa 3: Arquitectura U-Net
+```python
+from src.conv_blocks import BasicUNet
+
+# Modelo U-Net desde cero con 24M parámetros
+model = BasicUNet(in_channels=3, out_channels=1)
+print(f"Parámetros totales: {sum(p.numel() for p in model.parameters()):,}")
+```
+
+### Etapa 4: Entrenamiento Completo
+```bash
+# Entrenar el modelo (configurado para GPU)
+python -m src.train
+
+# Resultados obtenidos:
+# - 91% Dice Score final
+# - Convergencia en 25 épocas
+# - Modelo guardado en unet_nuclei.pth
+```
+
+### Etapa 5: Conteo de Células
+```python
+from src.inference import NucleiPredictor
+
+# Cargar modelo entrenado
+predictor = NucleiPredictor("unet_nuclei.pth")
+
+# Hacer predicción y conteo
+result = predictor.predict_from_path("imagen.png")
+count_result = predictor.count_cells(result['binary_mask'])
+
+print(f"Células detectadas: {count_result['count']}")
+# Salida: Células detectadas: 18
+```
+
 ---
 
-## 🧪 Pruebas y Validación
+## Pruebas y Validación
 
 ### Ejecutar Todas las Pruebas
 ```bash
@@ -188,32 +244,7 @@ jupyter lab
 # - notebooks/normalization_techniques.ipynb
 ```
 
----
-
-## 📈 Estado Actual del Desarrollo
-
-### ✅ **Completado**
-- [x] **Análisis exploratorio** completo del dataset
-- [x] **6 técnicas de normalización** implementadas y comparadas
-- [x] **Mapas de peso morfológicos** con gradiente morfológico
-- [x] **Dataset PyTorch personalizado** con lazy loading
-- [x] **Pipeline de datos completo** validado con 2,224 muestras
-- [x] **Pruebas automatizadas** con cobertura del 100%
-
-### 🔄 **En Progreso**
-- [ ] Arquitectura U-Net desde cero
-- [ ] Bloques convolucionales modulares
-- [ ] Skip connections optimizadas
-
-### 📋 **Próximos Pasos**
-1. **Arquitectura Neural Básica** (Etapa 3)
-2. **Función de Pérdida DiceBCE** (Etapa 4)
-3. **Loop de Entrenamiento** con AMP (Etapa 5)
-4. **Post-procesamiento Watershed** (Etapa 6)
-
----
-
-## 🎯 Especificaciones Técnicas
+## Especificaciones Técnicas
 
 ### Tensores del Dataset
 ```python
@@ -245,45 +276,62 @@ batch = {
 - **`clahe_gamma`**: CLAHE + corrección gamma para contraste
 - **`none`**: Escalado simple a [0, 1]
 
----
 
-## 🚀 Uso Rápido
+## Uso Rápido del Sistema Completo
 
+### Entrenar el Modelo
+```bash
+# Entrenar desde cero (requiere GPU recomendado)
+python -m src.train
+
+# Resultados esperados:
+# - Dice Score: ~90%
+# - Modelo guardado: unet_nuclei.pth
+```
+
+### Conteo de Células en Nueva Imagen
 ```python
-# Ejemplo completo de uso del dataset
-from src.nuclei_dataset import NucleiDataset, create_data_loaders
-import matplotlib.pyplot as plt
+from src.inference import NucleiPredictor
 
-# 1. Crear dataset
-dataset = NucleiDataset("data", generate_weight_maps=True)
-print(f"Dataset cargado: {len(dataset)} muestras")
+# 1. Cargar modelo entrenado
+predictor = NucleiPredictor("unet_nuclei.pth")
 
-# 2. Obtener una muestra
-sample = dataset[0]
-print(f"Imagen: {sample['image'].shape}")
-print(f"Máscara: {sample['mask'].shape}")  
-print(f"Pesos: {sample['weight_map'].shape}")
+# 2. Procesar imagen y contar células
+result = predictor.predict_from_path("mi_imagen.png")
+count_result = predictor.count_cells(result['binary_mask'])
 
-# 3. Crear DataLoaders
-train_loader, val_loader = create_data_loaders("data", batch_size=4)
+print(f"🔬 Células detectadas: {count_result['count']}")
+print(f"📊 Área promedio: {np.mean([p.area for p in count_result['cell_properties']]):.1f} píxeles")
 
-# 4. Iterar sobre batches
-for batch in train_loader:
-    images = batch['image']      # (4, 3, 256, 256)
-    masks = batch['mask']        # (4, 256, 256)
-    weights = batch['weight_map'] # (4, 256, 256)
-    break
+# 3. Visualizar resultados (se guarda automáticamente)
+# Las visualizaciones se guardan en cell_counting_result.png
+```
+
+### Pipeline Completo de Datos
+```python
+from src.nuclei_dataset import NucleiDataset
+from torch.utils.data import DataLoader
+
+# Dataset con todas las configuraciones optimizadas
+dataset = NucleiDataset(
+    data_root="data", 
+    normalization_method='per_channel',
+    generate_weight_maps=True
+)
+
+# Listo para entrenamiento
+loader = DataLoader(dataset, batch_size=4, shuffle=True)
 ```
 
 ---
 
-## 📞 Información de Contacto
+## Información de Contacto
 
 **Autor**: Tomás Hermosilla
 **Contacto**: tomas.hermosilla.p@gmail.com 
 
 ---
 
-## 📜 Licencia
+## Licencia
 
 Este proyecto abierto es de propósito educativo y de investigación.

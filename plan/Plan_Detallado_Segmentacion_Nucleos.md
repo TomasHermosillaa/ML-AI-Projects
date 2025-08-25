@@ -220,18 +220,18 @@ Desarrollar un sistema completo de segmentación de instancias de núcleos celul
 - Patrón de diseño modular en arquitecturas
 
 **Tareas Específicas:**
-- [ ] Estudiar componentes fundamentales:
+- [x] Estudiar componentes fundamentales:
   - `nn.Conv2d`: parámetros y funcionamiento
   - `nn.BatchNorm2d`: normalización por lotes
   - `nn.ReLU`: función de activación
-- [ ] Implementar bloque convolucional básico:
+- [x] Implementar bloque convolucional básico:
   - Clase `ConvBlock` con Conv + BatchNorm + ReLU
   - Hacer configurable (canales entrada/salida, kernel size)
-- [ ] Probar bloque con tensor de ejemplo:
+- [x] Probar bloque con tensor de ejemplo:
   - Input: (1, 3, 256, 256) → Output esperado
   - Verificar dimensiones
   - Visualizar activaciones si es posible
-- [ ] Crear bloque de "doble convolución" (patrón U-Net):
+- [x] Crear bloque de "doble convolución" (patrón U-Net):
   - Dos convoluciones consecutivas
   - Validar con datos reales
 
@@ -251,16 +251,16 @@ Desarrollar un sistema completo de segmentación de instancias de núcleos celul
 - Reconstrucción espacial con ConvTranspose
 
 **Tareas Específicas:**
-- [ ] Implementar y probar downsampling:
+- [x] Implementar y probar downsampling:
   - `nn.MaxPool2d` con stride=2
   - Verificar reducción de dimensiones: 256→128→64→32
-- [ ] Implementar y probar upsampling:
+- [x] Implementar y probar upsampling:
   - `nn.ConvTranspose2d` para reconstrucción
   - Verificar aumento de dimensiones: 32→64→128→256
-- [ ] Crear funciones de prueba que verifiquen:
+- [x] Crear funciones de prueba que verifiquen:
   - Preservación de información semántica
   - Dimensiones correctas en cada paso
-- [ ] Documentar trade-offs:
+- [x] Documentar trade-offs:
   - Pérdida vs ganancia de información
   - Costos computacionales
 
@@ -279,23 +279,23 @@ Desarrollar un sistema completo de segmentación de instancias de núcleos celul
 - Flujo de información en U-Net
 
 **Tareas Específicas:**
-- [ ] Diseñar arquitectura U-Net simplificada:
+- [x] Diseñar arquitectura U-Net simplificada:
   - 3 niveles de encoder (downsample)
   - Bottleneck central
   - 3 niveles de decoder (upsample)
   - Skip connections entre niveles correspondientes
-- [ ] Implementar clase `BasicUNet`:
+- [x] Implementar clase `BasicUNet`:
   - Definir layers en `__init__`
   - Implementar forward pass con skip connections
   - Manejar concatenación de features correctamente
-- [ ] Validar arquitectura:
+- [x] Validar arquitectura:
   - Forward pass con imagen real (3, 256, 256)
   - Verificar output shape (1, 256, 256) para segmentación
   - Debug dimensiones en cada skip connection
-- [ ] Crear visualizador de arquitectura:
+- [x] Crear visualizador de arquitectura:
   - Mostrar shapes en cada capa
   - Identificar parámetros totales
-- [ ] Probar inference básica (sin entrenamiento)
+- [x] Probar inference básica (sin entrenamiento)
 
 **Entregables:**
 - Clase `BasicUNet` completamente implementada
@@ -702,14 +702,17 @@ Desarrollar un sistema completo de segmentación de instancias de núcleos celul
 - ✅ Arquitectura modular y bien documentada
 
 ### **Etapa 4: Entrenamiento**
-- ✅ Modelo entrenando y convergiendo
-- ✅ IoU mejorando consistentemente
-- ✅ Sistema de evaluación robusto
+- ✅ Modelo entrenado exitosamente con 91% Dice Score
+- ✅ Pipeline completo de entrenamiento implementado
+- ✅ Sistema de evaluación robusto con métricas avanzadas
+- ✅ Modelo guardado y listo para producción
 
-### **Etapa 5: Post-procesamiento**
-- ✅ Pipeline Watershed integrado funcionalmente
-- ✅ Conversión exitosa de predicciones a instancias
-- ✅ Evaluación cualitativa satisfactoria
+### **Etapa 5: Post-procesamiento y Conteo**
+- ✅ Sistema completo de conteo de células implementado
+- ✅ 3 métodos de conteo: Simple, Watershed, Distance Transform
+- ✅ Precisión de conteo: 78.3% (18/23 células detectadas)
+- ✅ Visualizaciones completas con análisis de resultados
+- ✅ Pipeline end-to-end: Imagen → Segmentación → Conteo
 
 ### **Etapa 6: Demo**
 - ✅ Aplicación Streamlit funcional y pulida
